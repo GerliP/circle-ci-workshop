@@ -1,6 +1,6 @@
 version: 2.0
 jobs:
-  build:
+  job-1:
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
@@ -11,6 +11,11 @@ jobs:
             gradle test
       - store_test_results:
           path: build/test-results
+  job-2: 
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - checkout:
       - run: 
           name: Create jar
           command: |
@@ -18,3 +23,11 @@ jobs:
       - store_artifacts:
           path: build/libs
           destination: prefix
+workflows: 
+  version: 2
+  two_jobs_flow:
+    jobs: 
+      - job-1
+      - job-2:
+          requires: 
+            - job-1
