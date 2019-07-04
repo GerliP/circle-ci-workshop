@@ -1,5 +1,17 @@
 version: 2.0
 jobs:
+  dockerize:
+    machine: true
+    steps: 
+      - checkout
+      # Login to docker
+      - run: docker login -i $DOCKER_USER -p $DOCKER_PASS
+
+      #Build the application image
+      - run: docker build -t $DOCKER_USER/gilded:$CIRCLE_SHA1 .
+
+      #deploy the image
+      - run: docker push $DOCKER_USER/gilded:$CIRCLE_SHA1
   test:
     docker:
       - image: circleci/openjdk:8-jdk
